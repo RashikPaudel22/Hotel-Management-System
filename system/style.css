@@ -1,0 +1,209 @@
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: #fff;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.profile-info h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.role {
+    font-size: 12px;
+    color: gray;
+}
+
+.status {
+    font-size: 12px;
+    color: #444;
+}
+
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #00c215;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.menu li {
+    margin-bottom: 10px;
+}
+
+.menu a {
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.menu a i {
+    margin-right: 10px;
+}
+
+.menu a:hover {
+    background: #000;
+    color: #fff;
+}
+.modern-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8f9fa;   /* light background */
+}
+
+/* Card box same as add task */
+.modern-card {
+    width: 420px;  /* perfect compact form width */
+    background: #fff;
+    padding: 35px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    border: 1px solid #eaeaea;
+}
+
+/* Heading */
+.modern-card h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 26px;
+    color: #333;
+}
+
+/* Labels above inputs */
+.modern-card label {
+    font-size: 15px;
+    display: block;
+    margin: 8px 0 4px;
+    color: #444;
+}
+
+/* Inputs & textarea */
+.modern-card input[type="text"],
+.modern-card input[type="email"],
+.modern-card input[type="password"],
+.modern-card textarea,
+.modern-card select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    margin-bottom: 14px;
+    font-size: 15px;
+}
+
+.modern-card input:focus,
+.modern-card select:focus,
+.modern-card textarea:focus {
+    border-color: #4C6FFF;
+}
+
+/* Submit button */
+.modern-card input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #4C6FFF;
+    color: white;
+    border-radius: 8px;
+    font-size: 17px;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: 0.3s;
+}
+
+.modern-card input[type="submit"]:hover {
+    background: #3754d9;
+}
+.section-box{
+    background:#fff;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+.submit-btn{
+    background:#2563eb;
+}
+.submit-btn:hover{
+    background:#1e40af;
+}
+.reports-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.reports-table th,
+.reports-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.reports-table th {
+    background: #34495e;
+    color: white;
+}
+
+.reports-table tr:nth-child(even) {
+    background: #f4f6f7;
+}
+
+.message {
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.status.Pending {
+    background: #f39c12;
+    color: #000;
+}
+
+.status.In\ Review {
+    background: #3498db;
+    color: #fff;
+}
+
+.status.Resolved {
+    background: #2ecc71;
+    color: #fff;
+}
