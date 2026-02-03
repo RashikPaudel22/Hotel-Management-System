@@ -1,81 +1,346 @@
 <?php
-session_start();
+/**
+ * Login Page
+ * Handles user authentication
+ */
 
-include("database.php");
-require_once("htmlload.php");
+require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/database.php';
 
-// Check if this is an AJAX request
-$isAjax = isset($_POST['ajax_login']);
+$error = "";
 
-if (isset($_POST['login']) || $isAjax) {
-
-    // Get form data
-    $username = $_POST["username"];
-    $password = $_POST["password"];
-
-    // Validate user (NOTE: You should use prepared statements for security!)
-    $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-
-        $row = $result->fetch_assoc();
-
-        // Set session values
-        $_SESSION['user'] = [
-            "id" => $row['id'],
-            "username" => $row['username'],
-            "role" => $row['role']
-        ];
-
-        // Determine redirect URL based on role
-        if ($row['role'] === "admin") {
-            $redirectUrl = "/hms/app/admin/dashboard.php";
-        } 
-        elseif ($row['role'] === "receptionist") {
-            $redirectUrl = "/hms/app/reception/dashboard.php";
-        } 
-        else {
-            $redirectUrl = "/hms/app/customer/dashboard.php";
-        }
-
-        // If AJAX request, return JSON
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            echo json_encode([
-                'success' => true,
-                'role' => $row['role'],
-                'redirect' => $redirectUrl
-            ]);
-            exit;
-        } else {
-            // Regular form submission
-            header("Location: " . $redirectUrl);
-            exit;
-        }
-
+// Redirect if already logged in (but verify session is valid)
+if (isLoggedIn()) {
+    // Check if the session has required data
+    if (isset($_SESSION['user']['id']) && isset($_SESSION['user']['role'])) {
+        redirectByRole();
+        exit();
     } else {
-        // Login failed
-        if ($isAjax) {
-            header('Content-Type: application/json');
-            echo json_encode([
-                'success' => false,
-                'message' => 'Invalid username or password'
-            ]);
-            exit;
-        } else {
-            // Show error + login form again (HTML from htmlload.php)
-            loadHeader("Login");
-            echo "<p style='color:red;text-align:center'>Invalid username or password</p>";
-            login_form(); 
-            loadFooter();
-        }
+        // Invalid session, clear it
+        logoutUser();
     }
-
-} else {
-    // If opened normally, show login form
-    loadHeader("Login");
-    login_form();
-    loadFooter();
 }
+
+// Handle login form submission
+if (isset($_POST['login'])) {
+    $username = trim($_POST['username']);
+    $password = $_POST['password'];
+    
+    if (!empty($username) && !empty($password)) {
+        $stmt = $conn->prepare("SELECT id, username, password, role, full_name, email FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 1) {
+            $user = $result->fetch_assoc();
+            
+            // Check password - supports both hashed and plain text for migration
+            $passwordMatch = false;
+            if (password_get_info($user['password'])['algo'] !== null) {
+                // Password is hashed
+                $passwordMatch = password_verify($password, $user['password']);
+            } else {
+                // Plain text password (for backward compatibility)
+                $passwordMatch = ($password === $user['password']);
+            }
+            
+            if ($passwordMatch) {
+                // Log in the user
+                loginUser($user);
+                
+                // Redirect to intended page or dashboard
+                if (isset($_SESSION['redirect_after_login'])) {
+                    $redirect = $_SESSION['redirect_after_login'];
+                    unset($_SESSION['redirect_after_login']);
+                    header("Location: " . $redirect);
+                } else {
+                    redirectByRole();
+                }
+                exit();
+            } else {
+                $error = "Invalid username or password";
+            }
+        } else {
+            $error = "Invalid username or password";
+        }
+        $stmt->close();
+    } else {
+        $error = "Please fill in all fields";
+    }
+}
+
+// Include helper functions for HTML
+require_once __DIR__ . '/htmlload.php';
+
+// Load header
+loadHeader('Login - Destr0yer Hotel');
 ?>
+
+<style>
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 450px;
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-wrapper {
+    padding: 40px 30px;
+    background: #fff;
+    border-radius: 20px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.login-form-group {
+    margin-bottom: 20px;
+}
+
+.login-form-group label {
+    display: block;
+    font-weight: 500;
+    color: #2d3748;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: #4361ee;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 25px 0;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.divider span {
+    padding: 0 10px;
+}
+
+.create-account-btn {
+    width: 100%;
+    padding: 14px;
+    background: #fff;
+    color: #4361ee;
+    border: 2px solid #4361ee;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.create-account-btn:hover {
+    background: #4361ee;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+}
+
+.create-account-btn:active {
+    transform: translateY(0);
+}
+
+.alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-error {
+    background: #fee;
+    color: #c33;
+    border-left: 4px solid #c33;
+}
+
+.password-toggle {
+    position: relative;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #94a3b8;
+    user-select: none;
+    font-size: 18px;
+}
+</style>
+
+<div class="login-container">
+    <div class="login-wrapper">
+        <div class="login-header">
+            <h2>Welcome Back!</h2>
+            <p>Please login to your account</p>
+        </div>
+
+        <?php if (!empty($error)): ?>
+            <div class="alert alert-error">
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" action="">
+            <div class="login-form-group">
+                <label for="username">Username</label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    id="username"
+                    class="login-input"
+                    placeholder="Enter your username"
+                    value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
+                    required
+                    autocomplete="username"
+                >
+            </div>
+
+            <div class="login-form-group">
+                <label for="password">Password</label>
+                <div class="password-toggle">
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="password"
+                        class="login-input"
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <span class="password-toggle-icon" onclick="togglePassword()">👁️</span>
+                </div>
+            </div>
+
+            <button type="submit" name="login" class="login-btn">
+                Log In
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <button type="button" class="create-account-btn" onclick="goToRegister()">
+            Create New Account
+        </button>
+    </div>
+</div>
+
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const icon = document.querySelector('.password-toggle-icon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.textContent = '🙈';
+    } else {
+        passwordInput.type = 'password';
+        icon.textContent = '👁️';
+    }
+}
+
+function goToRegister() {
+    window.location.href = '/hms/system/register.php';
+}
+</script>
+

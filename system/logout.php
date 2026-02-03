@@ -1,5 +1,15 @@
 <?php
-session_start();
-session_destroy();
-header("Location:../index.php");
-exit;
+/**
+ * Logout Handler
+ * Logs out the user and redirects to homepage
+ */
+
+require_once __DIR__ . '/auth.php';
+
+// Log out the user
+logoutUser();
+
+// Redirect to homepage
+header("Location: /hms/index.php");
+exit();
+?>

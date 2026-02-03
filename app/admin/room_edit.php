@@ -1,67 +1,96 @@
 <?php
-include("../../system/auth.php"); 
-include("../../system/database.php");
-require_once __DIR__ . "/../../system/htmlload.php";
-require_once("functions.php");
+/**
+ * Edit Room Page
+ * Form to edit existing room details
+ */
 
+// Authentication
+require_once __DIR__ . '/../../system/auth.php';
 requireLogin();
-requireRole("admin");
+requireRole('admin');
 
-/* ---------- VALIDATE ID ---------- */
-if (!isset($_GET['id'])) {
-    die("Room not found!");
-}
+// Dependencies
+require_once __DIR__ . '/../../system/database.php';
+require_once __DIR__ . '/../../system/htmlload.php';
 
-$id = intval($_GET['id']);
+$error = '';
+$roomId = $_GET['id'] ?? 0;
 
-/* ---------- FETCH ROOM ---------- */
-$result = $conn->query("SELECT * FROM rooms WHERE id='$id'");
-if ($result->num_rows === 0) {
-    die("Room not found!");
-}
-$room = $result->fetch_assoc();
-
-/* ---------- FETCH ROOM TYPES ---------- */
-$typesResult = $conn->query("SELECT * FROM room_types");
-
-/* ---------- FORM SUBMIT ---------- */
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $room_number = $_POST["room_number"];
-    $room_type   = $_POST["room_type"];
-    $status      = $_POST["status"];
-
-    $sql = "
-        UPDATE rooms 
-        SET room_number='$room_number',
-            type_id='$room_type',
-            status='$status'
-        WHERE id='$id'
-    ";
-
-    if ($conn->query($sql)) {
-        header("Location: room.php?updated=1");
-        exit;
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_room'])) {
+    $roomNumber = trim($_POST['room_number']);
+    $roomType = $_POST['room_type'];
+    $status = $_POST['status'];
+    
+    // Validation
+    if (empty($roomNumber) || empty($roomType)) {
+        $error = 'Please fill in all required fields.';
     } else {
-        $error = "Error updating room!";
+        // Check if room number exists for other rooms
+        $checkStmt = $conn->prepare("SELECT id FROM rooms WHERE room_number = ? AND id != ?");
+        $checkStmt->bind_param("si", $roomNumber, $roomId);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $error = 'Room number already exists!';
+        } else {
+            // Update room
+            $stmt = $conn->prepare("UPDATE rooms SET room_number = ?, type_id = ?, status = ? WHERE id = ?");
+            $stmt->bind_param("sisi", $roomNumber, $roomType, $status, $roomId);
+            
+            if ($stmt->execute()) {
+                header('Location: room.php?success=1');
+                exit();
+            } else {
+                $error = 'Failed to update room. Please try again.';
+            }
+        }
     }
 }
-$username=$_SESSION['user']['username'];
 
-/* ---------- LAYOUT ---------- */
-loadHeader("Edit Room");
-sidebar($username);
+// Fetch room data
+$stmt = $conn->prepare("SELECT * FROM rooms WHERE id = ?");
+$stmt->bind_param("i", $roomId);
+$stmt->execute();
+$room = $stmt->get_result()->fetch_assoc();
 
-echo "<div class='main'>";
-
-if (!empty($error)) {
-    echo "<div class='alert alert-danger'>$error</div>";
+if (!$room) {
+    header('Location: room.php');
+    exit();
 }
 
-/* ---------- PAGE CONTENT ---------- */
-edit_room_form($room, $typesResult);
+// Fetch room types for dropdown
+$roomTypes = $conn->query("SELECT * FROM room_types ORDER BY name");
 
-echo "</div>";
+// Load page
+loadHeader('Edit Room');
 
-loadFooter();
+// Include sidebar
+include __DIR__ . '/includes/sidebar.php';
 ?>
+
+<!-- Main content area -->
+<div class="main-content" style="margin-left: 260px; padding: 40px; min-height: 100vh;">
+    <div class="header" style="margin-bottom: 30px;">
+        <h1 style="color: var(--primary); font-size: 28px; margin-bottom: 10px;">Edit Room</h1>
+        <p style="color: var(--text-gray);">Update room details</p>
+    </div>
+    
+    <div style="margin-bottom: 20px;">
+        <a href="room.php" class="btn btn-secondary">← Back to Rooms</a>
+    </div>
+    
+    <?php if ($error): ?>
+        <div class="alert alert-danger" style="max-width: 600px; margin: 20px auto;">
+            <?php echo htmlspecialchars($error); ?>
+        </div>
+    <?php endif; ?>
+    
+    <?php
+    // Include edit room form component
+    include __DIR__ . '/components/room_edit_form.php';
+    ?>
+</div>
+
+<?php loadFooter(); ?>

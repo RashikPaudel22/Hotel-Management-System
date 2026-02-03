@@ -1,72 +1,53 @@
 <?php
-include("../../system/auth.php");
-include("../../system/database.php");
-require_once("../../system/htmlload.php");
-require_once("functions.php");
-
+require_once __DIR__ . '/../../system/auth.php';
 requireLogin();
-requireRole("admin");
+requireRole('admin');
 
-/* ---------- VALIDATE ID ---------- */
-if (!isset($_GET['id'])) {
-    die("User not found!");
-}
+require_once __DIR__ . '/../../system/database.php';
+require_once __DIR__ . '/../../system/htmlload.php';
 
-$id = intval($_GET['id']);
+$userId = $_GET['id'] ?? 0;
+$error = '';
 
-/* ---------- FETCH USER ---------- */
-$result = $conn->query("SELECT id, username, role FROM users WHERE id='$id'");
-
-if ($result->num_rows === 0) {
-    die("User not found!");
-}
-
-$user = $result->fetch_assoc();
-
-/* ---------- FORM SUBMIT ---------- */
-if (isset($_POST['update_user'])) {
-
-    $username = $_POST['username'];
-    $role     = $_POST['role'];
-
-    // Password update only if filled
-    if (!empty($_POST['password'])) {
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $sql = "
-            UPDATE users 
-            SET username='$username', role='$role', password='$password'
-            WHERE id='$id'
-        ";
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
+    $username = trim($_POST['username']);
+    $role = $_POST['role'];
+    $password = $_POST['password'];
+    
+    if (!empty($password)) {
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("UPDATE users SET username = ?, role = ?, password = ? WHERE id = ?");
+        $stmt->bind_param("sssi", $username, $role, $hashedPassword, $userId);
     } else {
-        $sql = "
-            UPDATE users 
-            SET username='$username', role='$role'
-            WHERE id='$id'
-        ";
+        $stmt = $conn->prepare("UPDATE users SET username = ?, role = ? WHERE id = ?");
+        $stmt->bind_param("ssi", $username, $role, $userId);
     }
-
-    if ($conn->query($sql)) {
-        header("Location: users.php?updated=1");
-        exit;
+    
+    if ($stmt->execute()) {
+        header('Location: users.php?success=1');
+        exit();
     } else {
-        $error = "Update failed!";
+        $error = 'Failed to update staff.';
     }
 }
-$username=$_SESSION['user']['username'];
-/* ---------- LAYOUT ---------- */
-loadHeader("Edit Staff");
-sidebar($username);
 
-echo "<div class='main'>";
+// Fetch user data
+$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
 
-if (!empty($error)) {
-    echo "<div class='alert alert-danger'>$error</div>";
-}
-
-/* ---------- PAGE CONTENT ---------- */
-user_edit_form($user);
-
-echo "</div>";
-
-loadFooter();
+loadHeader('Edit Staff');
+include __DIR__ . '/includes/sidebar.php';
 ?>
+
+<div class="main">
+    <?php if ($error): ?>
+        <div class="alert alert-danger"><?php echo $error; ?></div>
+    <?php endif; ?>
+    
+    <?php include __DIR__ . '/components/user_edit_form.php'; ?>
+</div>
+
+<?php loadFooter(); ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2025 at 08:03 PM
+-- Generation Time: Feb 02, 2026 at 04:41 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,19 +43,12 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `customer_id`, `room_id`, `checkin_date`, `checkout_date`, `total_price`, `status`, `created_at`) VALUES
-(1, 1, 5, '2025-12-12', '2025-12-13', 0.00, 'pending', '2025-12-12 02:44:24'),
-(2, 2, 4, '2025-12-12', '2025-12-13', 0.00, 'pending', '2025-12-12 02:44:43'),
-(3, 3, 4, '2025-12-12', '2025-12-13', 0.00, 'pending', '2025-12-12 02:47:25'),
-(4, 4, 6, '2025-12-13', '2025-12-16', 0.00, 'pending', '2025-12-12 02:49:27'),
-(51, 64, 1, '2025-12-27', '2025-12-29', 0.00, 'pending', '2025-12-13 08:31:57'),
-(52, 65, 4, '2025-12-25', '2025-12-18', 0.00, 'pending', '2025-12-13 08:34:52'),
-(60, 73, 3, '2025-12-15', '2025-12-18', 0.00, 'pending', '2025-12-13 19:00:58'),
-(61, 74, 3, '2025-12-15', '2025-12-18', 0.00, 'pending', '2025-12-13 19:01:17'),
-(62, 75, 3, '2025-12-15', '2025-12-18', 0.00, 'pending', '2025-12-13 19:02:41'),
-(63, 76, 5, '2025-12-18', '2026-01-02', 0.00, 'pending', '2025-12-13 19:03:26'),
-(64, 77, 1, '2025-12-16', '2025-12-19', 0.00, 'pending', '2025-12-13 19:05:16'),
-(65, 78, 1, '2025-12-15', '2025-12-17', 0.00, 'pending', '2025-12-14 03:45:04'),
-(66, 79, 1, '2025-12-24', '2025-12-26', 0.00, 'pending', '2025-12-15 13:07:01');
+(76, 89, 4, '2026-02-09', '2026-02-11', 7000.00, 'checked_out', '2026-02-01 08:40:06'),
+(77, 90, 3, '2026-02-02', '2026-02-05', 6000.00, 'checked_out', '2026-02-01 13:12:03'),
+(78, 91, 3, '2026-02-02', '2026-02-05', 6000.00, 'cancelled', '2026-02-01 13:45:46'),
+(79, 92, 8, '2026-02-11', '2026-02-14', 18000.00, 'checked_out', '2026-02-01 13:48:26'),
+(80, 93, 3, '2026-02-02', '2026-02-05', 6000.00, 'confirmed', '2026-02-01 14:59:56'),
+(81, 94, 3, '2026-02-05', '2026-02-09', 8000.00, 'pending', '2026-02-02 14:55:00');
 
 -- --------------------------------------------------------
 
@@ -79,85 +72,12 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `fname`, `lname`, `phone`, `email`, `address`, `id_number`, `created_at`) VALUES
-(1, 'hello', 'hi', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-12 02:44:24'),
-(2, 'hello', 'hi', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-12 02:44:43'),
-(3, 'sssss', 'sssss', '111', 'as@gmail', 'hi', '1111', '2025-12-12 02:47:25'),
-(4, 'aaa', 'aaaa', '111', 'hellohi@gmail', 'hi', '1111', '2025-12-12 02:49:27'),
-(5, 'hello', 'sssss', '1231231', 'rashik.pasa456@gmail.com', 'hi', '1111', '2025-12-13 07:06:06'),
-(6, 'hello', 'sssss', '1231231', 'rashik.pasa456@gmail.com', 'hi', '1111', '2025-12-13 07:11:32'),
-(7, 'hello', 'sssss', '1231231', 'rashik.pasa456@gmail.com', 'hi', '1111', '2025-12-13 07:11:33'),
-(8, 'hello', 'sssss', '1231231', 'rashik.pasa456@gmail.com', 'hi', '1111', '2025-12-13 07:11:34'),
-(9, 'hello', 'sssss', '1231231', 'rashik.pasa456@gmail.com', 'hi', '1111', '2025-12-13 07:11:34'),
-(10, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 07:11:52'),
-(11, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 07:13:31'),
-(12, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 07:49:08'),
-(13, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 07:51:00'),
-(14, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 07:51:12'),
-(15, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 07:52:14'),
-(16, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 07:54:21'),
-(17, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 07:57:13'),
-(18, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:01:43'),
-(19, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:19:10'),
-(20, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:19:11'),
-(21, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:19:11'),
-(22, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:19:11'),
-(23, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:19:11'),
-(24, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:19:12'),
-(25, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:19:26'),
-(26, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:20:12'),
-(27, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:20:37'),
-(28, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:20:37'),
-(29, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:20:37'),
-(30, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:21:14'),
-(31, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:21:38'),
-(32, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:21:38'),
-(33, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:21:38'),
-(34, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:21:38'),
-(35, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:21:39'),
-(36, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:21:39'),
-(37, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:21:39'),
-(38, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:24:43'),
-(39, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:26:35'),
-(40, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:27:03'),
-(41, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:27:36'),
-(42, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:27:36'),
-(43, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:27:36'),
-(44, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:27:37'),
-(45, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:27:37'),
-(46, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:20'),
-(47, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:20'),
-(48, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:21'),
-(49, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:21'),
-(50, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:47'),
-(51, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:48'),
-(52, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:48'),
-(53, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:48'),
-(54, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:49'),
-(55, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:49'),
-(56, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:28:58'),
-(57, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:29:09'),
-(58, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:29:10'),
-(59, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:29:10'),
-(60, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:29:18'),
-(61, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:29:25'),
-(62, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:29:26'),
-(63, 'hello', 'sssss', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:29:26'),
-(64, 'aaa', 'aaaa', '1231231', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:31:56'),
-(65, 'hello', 'sssss', '1231231', 'rashik.pasa456@gmail.com', 'Tyanglaphant', '1111', '2025-12-13 08:34:52'),
-(66, 'hello', 'hi', '111', 'ram@prasad', 'Tyanglaphant', '2131231', '2025-12-13 08:39:01'),
-(67, 'hello', 'hi', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-13 18:49:31'),
-(68, 'hello', 'hi', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-13 18:56:19'),
-(69, 'hello', 'hi', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-13 18:56:35'),
-(70, 'hello', 'hi', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-13 18:56:36'),
-(71, 'hello', 'hi', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-13 18:56:43'),
-(72, 'hello', 'hi', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-13 18:56:55'),
-(73, 'hello', 'hi', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-13 19:00:58'),
-(74, 'hello', 'hi', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-13 19:01:17'),
-(75, 'hello', 'hi', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-13 19:02:41'),
-(76, 'aaa', 'sssss', '1231231', 'marashikho123@gmail.com', 'Tyanglaphant', '2131231', '2025-12-13 19:03:26'),
-(77, 'aaa', 'sssss', '1231231', 'rashik.pasa456@gmail.com', 'Tyanglaphant', '1111', '2025-12-13 19:05:16'),
-(78, 'aaa', 'sssss', '1231231', 'marashikho123@gmail.com', 'hi', '2131231', '2025-12-14 03:45:04'),
-(79, 'hello', 'hi', '111', 'ram@prasad', 'Tyanglaphant', '1111', '2025-12-15 13:07:01');
+(89, 'aaa', 'hi', '56465464645', 'ram@prasad.com', 'Tyanglaphant', '2222222', '2026-02-01 08:40:06'),
+(90, 'hello', 'hi', '56465464645', 'rashik.pasa456@gmail.com', 'Tyanglaphant', '2222222', '2026-02-01 13:12:03'),
+(91, 'aaa', 'sssss', '9808449412', 'rashik.pasa456@gmail.com', 'Tyanglaphant', '2222222', '2026-02-01 13:45:46'),
+(92, 'aaa', 'hi', '9808449412', 'rashik.pasa456@gmail.com', 'Tyanglaphant', '2222222', '2026-02-01 13:48:26'),
+(93, 'hello', 'sssss', '56465464645', 'rashik.pasa456@gmail.com', 'Tyanglaphant', '2222222', '2026-02-01 14:59:56'),
+(94, 'hello', 'hi', '56465464645', 'rashik.pasa456@gmail.com', 'Tyanglaphant', '2222222', '2026-02-02 14:55:00');
 
 -- --------------------------------------------------------
 
@@ -206,7 +126,8 @@ CREATE TABLE `reports` (
 --
 
 INSERT INTO `reports` (`id`, `user_id`, `subject`, `message`, `status`, `created_at`) VALUES
-(1, 5, 'dustbin', 'no dustbin', 'pending', '2025-12-14 14:46:17');
+(1, 5, 'dustbin', 'no dustbin', 'pending', '2025-12-14 14:46:17'),
+(2, 5, 'hawa', 'raixa', 'pending', '2026-02-01 15:45:15');
 
 -- --------------------------------------------------------
 
@@ -228,7 +149,10 @@ CREATE TABLE `reviews` (
 
 INSERT INTO `reviews` (`id`, `user_id`, `rating`, `comment`, `created_at`) VALUES
 (1, 5, 3, 'decent place', '2025-12-14 14:44:07'),
-(2, 5, 3, 'decent place', '2025-12-14 14:44:11');
+(2, 5, 3, 'decent place', '2025-12-14 14:44:11'),
+(3, 5, 5, 'sada', '2026-02-01 15:44:31'),
+(4, 5, 5, 'wowww', '2026-02-01 15:44:35'),
+(5, 5, 5, 'wowww', '2026-02-01 15:44:37');
 
 -- --------------------------------------------------------
 
@@ -250,12 +174,12 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `room_number`, `type_id`, `availability`, `status`, `created_at`) VALUES
-(1, '11', 3, 1, 1, '2025-12-09 08:18:08'),
-(3, '99', 1, 0, 0, '2025-12-12 01:51:54'),
-(4, '123', 2, 0, 0, '2025-12-12 02:37:00'),
+(1, '11', 3, 0, 0, '2025-12-09 08:18:08'),
+(3, '99', 1, 1, 0, '2025-12-12 01:51:54'),
+(4, '123', 2, 1, 0, '2025-12-12 02:37:00'),
 (5, '111', 2, 0, 0, '2025-12-12 02:37:04'),
 (6, '222', 3, 0, 0, '2025-12-12 02:37:10'),
-(8, '666', 5, 0, 0, '2025-12-18 14:03:47');
+(8, '666', 5, 1, 0, '2025-12-18 14:03:47');
 
 -- --------------------------------------------------------
 
@@ -309,9 +233,10 @@ INSERT INTO `users` (`id`, `name`, `username`, `email`, `full_name`, `phone`, `p
 (2, NULL, 'rashik', NULL, NULL, NULL, 'hello1212', 'admin', '2025-12-09 08:28:04'),
 (3, 'recep', 'john', NULL, NULL, NULL, 'recep1212', 'receptionist', '2025-12-14 02:45:33'),
 (4, NULL, 'hola', NULL, NULL, NULL, '$2y$10$nadn02h7FmCwc6GZ1Yiyb.gJ86pY1.aR7IdgaJ4.oKJBcE6QgQrJe', 'receptionist', '2025-12-14 02:57:36'),
-(5, 'harry', 'harryop', NULL, NULL, NULL, 'customer1212', 'customer', '2025-12-14 13:43:06'),
+(5, 'harry', 'harryop', 'rashik.pasa456@gmail.com', NULL, NULL, 'customer1212', 'customer', '2025-12-14 13:43:06'),
 (6, NULL, 'ethan', NULL, NULL, NULL, '$2y$10$54ZNiHUUpYaut.yYjo35FuXVHt7CgCcPYJAdb9t46sLv4XhTgfU22', 'receptionist', '2025-12-18 14:10:31'),
-(7, NULL, 'rammm', 'as@gmail.com', 'ramprasad', '56465464645', 'ram111222', 'customer', '2025-12-21 06:34:26');
+(7, NULL, 'rammm', 'as@gmail.com', 'ramprasad', '56465464645', 'ram111222', 'customer', '2025-12-21 06:34:26'),
+(8, NULL, 'hello', NULL, NULL, NULL, '$2y$10$FZGIXj20cRc2yESc9.lYLujCPY94t337jIeQES4MHQ2L1w5OoDnKW', 'receptionist', '2026-02-01 09:00:22');
 
 --
 -- Indexes for dumped tables
@@ -391,13 +316,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `logs`
@@ -415,13 +340,13 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `reports`
 --
 ALTER TABLE `reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -439,7 +364,7 @@ ALTER TABLE `room_types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables

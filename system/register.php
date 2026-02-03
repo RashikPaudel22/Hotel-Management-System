@@ -1,22 +1,18 @@
 <?php
-session_start();
-include("database.php");
-require_once("htmlload.php");
+/**
+ * Registration Page
+ * Handles new user registration
+ */
+
+require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/database.php';
 
 $error = "";
 $success = "";
 
 // If already logged in, redirect based on role
-if (isset($_SESSION['user'])) {
-    $role = $_SESSION['user']['role'];
-    if ($role === 'customer') {
-        header('Location: ../app/customer/dashboard.php');
-    } elseif ($role === 'admin') {
-        header('Location: ../app/admin/dashboard.php');
-    } elseif ($role === 'receptionist') {
-        header('Location: ../app/reception/dashboard.php');
-    }
-    exit();
+if (isLoggedIn()) {
+    redirectByRole();
 }
 
 if (isset($_POST['register'])) {
@@ -30,7 +26,7 @@ if (isset($_POST['register'])) {
 
     // Validation
     if (empty($username) || empty($email) || empty($password) || empty($full_name)) {
-        $error = "All fields are required!";
+        $error = "All fields marked with * are required!";
     } elseif (strlen($username) < 3) {
         $error = "Username must be at least 3 characters long!";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -58,25 +54,32 @@ if (isset($_POST['register'])) {
             if ($result_email->num_rows > 0) {
                 $error = "Email already registered!";
             } else {
-                // Hash password for security (recommended)
-                // $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                // Hash password for security
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 
                 // Insert new user with 'customer' role automatically
-                $role = 'customer'; // Automatically set role to customer
+                $role = 'customer';
                 
                 $stmt = $conn->prepare("INSERT INTO users (username, email, password, full_name, phone, role) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("ssssss", $username, $email, $password, $full_name, $phone, $role);
+                $stmt->bind_param("ssssss", $username, $email, $hashed_password, $full_name, $phone, $role);
                 
                 if ($stmt->execute()) {
+                    // Get the newly inserted user data
+                    $userId = $conn->insert_id;
+                    
                     // Auto-login after registration
-                    $_SESSION['user'] = [
-                        "id" => $conn->insert_id,
-                        "username" => $username,
-                        "role" => $role
+                    $userData = [
+                        'id' => $userId,
+                        'username' => $username,
+                        'role' => $role,
+                        'full_name' => $full_name,
+                        'email' => $email
                     ];
                     
+                    loginUser($userData);
+                    
                     // Redirect to customer dashboard
-                    header("Location: ../app/customer/dashboard.php");
+                    header("Location: /hms/app/customer/dashboard.php");
                     exit();
                 } else {
                     $error = "Registration failed! Please try again.";
@@ -86,6 +89,7 @@ if (isset($_POST['register'])) {
     }
 }
 
+require_once __DIR__ . '/htmlload.php';
 loadHeader("Register - Create Account");
 ?>
 
@@ -274,6 +278,7 @@ body {
     cursor: pointer;
     color: #94a3b8;
     user-select: none;
+    font-size: 18px;
 }
 
 .form-row {
@@ -441,5 +446,3 @@ document.getElementById('confirm_password').addEventListener('input', function()
     }
 });
 </script>
-
-<?php loadFooter(); ?>
