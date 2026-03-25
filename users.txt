@@ -1,13 +1,3 @@
-*******ADMIN********
-username: rashik
-password: hello1212
-
-******RECEPTIONIST*******
-username: john
-password: recep1212
-
-username: ethan
-password: rrr111
 
 *******CUSTOMER*******
 username: harryop
